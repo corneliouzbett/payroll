@@ -19,6 +19,5 @@ import payroll.views as payroll_view
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$',payroll_view.hello),
-    url(r'^books/',payroll_view.showbooks),
+    url(r'^home/$',payroll_view.home),
 ]
