@@ -1,3 +1,4 @@
+#coding=utf8
 """mysite URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -15,9 +16,13 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.contrib.auth.views import login,logout
 import payroll.views as payroll_view
 
+admin.AdminSite.site_header=u'Payroll 系统管理'
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^home/$',payroll_view.home),
+    url(r'^accounts/login',login,{'temlate_name':'home.html'}),
+    url(r'^accounts/logout',logout,{'temlate_name':'home.html'}),
 ]
