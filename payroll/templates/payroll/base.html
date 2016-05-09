@@ -38,8 +38,14 @@
                     <li class="nav-general">
                     <a href="photos.html">Create Employee</a>
                     </li>
+                    {% if login  %}
+                    <li class=nav-general>
+                        <a href='#'>logout</a>
+                    </li>
+                    {% else %}
                     <li class="signin">
                     <a href="#myModal" data-toggle="modal">Login</a>
+                    {% endif %}
                     </li>
                 </ul>
             </div>
@@ -53,7 +59,8 @@
                         <h4 class="modal-title" id="myModalLabel" style="text-align: center;">Welcome</h4>
                     </div>
                     <div class="modal-body">
-                        <form role="form" action="/accounts/login" method="post" id="form_log_in">
+                        <form role="form" action="/accounts/mylogin" method="post" id="form_log_in">
+                            {% csrf_token %}
                             <div class="form-group">
                                 <label for="username">用户名:</label>
                                 <input type="text" class="form-control" name="username" placeholder="员工号">

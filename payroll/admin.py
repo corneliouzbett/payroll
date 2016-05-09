@@ -8,6 +8,7 @@ class DepartmentAdmin(admin.ModelAdmin):
 class EmployeeAdmin(admin.ModelAdmin):
     list_display=('id','name')
     search_fields=('id','name')
+    exlude=('username')
 
 class Employee_typeAdmin(admin.ModelAdmin):
     list_displays=('employee_type_id','employee_type')

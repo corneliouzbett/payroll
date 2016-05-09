@@ -23,6 +23,7 @@ admin.AdminSite.site_header=u'Payroll 系统管理'
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^home/$',payroll_view.home),
-    url(r'^accounts/login',login,{'temlate_name':'home.html'}),
+    url(r'^accounts/mylogin',payroll_view.mylogin),
+    #url(r'^accounts/login',login,{'temlate_name':'home.html'}),
     url(r'^accounts/logout',logout,{'temlate_name':'home.html'}),
 ]
