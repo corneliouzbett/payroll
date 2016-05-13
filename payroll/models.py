@@ -43,6 +43,7 @@ class Employee(User):
         super(Employee,self).save(*args,**kwargs)
     def create(self,*args,**kwargs):
         user=User.objects.create_user(username=self.employee_id , password='pknqaz12',email=self.email)
+        user.set_password('pknqaz12')
         self.user_ptr_id=user.id
         super(User,self).create(*args,**kwargs)
 

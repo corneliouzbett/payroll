@@ -10,7 +10,7 @@
         <meta name="description" content="">
         <title>{%block title%}{%endblock%}</title>
         <!-- Bootstrap core CSS -->
-        <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'payroll/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
         <!-- Custom styles for this template -->
         <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
         <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -59,7 +59,7 @@
                         <h4 class="modal-title" id="myModalLabel" style="text-align: center;">Welcome</h4>
                     </div>
                     <div class="modal-body">
-                        <form role="form" action="/accounts/mylogin" method="post" id="form_log_in">
+                        <form role="form" action="{% url 'payroll:login' %}" method="post" id="form_log_in">
                             {% csrf_token %}
                             <div class="form-group">
                                 <label for="username">用户名:</label>
@@ -81,8 +81,8 @@
         </div><!-- /.modal-content -->
         {% block content %}{% endblock %}
         {% block footer %}{% endblock %}
-        <script src="{% static 'jquery/jquery.min.js' %}"></script>
-        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'payroll/jquery/jquery.min.js' %}"></script>
+        <script src="{% static 'payroll/bootstrap/js/bootstrap.min.js' %}"></script>
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
         <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
         <script type="text/javascript">

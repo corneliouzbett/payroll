@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+    </head>
+    <body>
+        {% if login %}
+        <h1>success</h1>
+        {% else %}
+        <h1>fail</h1>
+        <form action="{% url 'payroll:login' %}" method="post">
+            <input type="text" value="" name="username">
+            <input type="PASSWORD"" name="password">
+            <input type="SUBMIT" value="sumbit">
+        </form>
+        {% endif %}
+    </body>
+</html>
