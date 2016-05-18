@@ -18,6 +18,7 @@ from django.conf.urls import url
 import payroll.views as payroll_view
 
 urlpatterns = [
-    url(r'^home/$',payroll_view.home),
-    url(r'^accounts/mylogin',payroll_view.mylogin,name='login'),
+    url(r'^home/$',payroll_view.home,name='home'),
+    url(r'^login',payroll_view.mylogin,name='login'),
+    url(r'^logout',payroll_view.mylogout,name='logout'),
 ]

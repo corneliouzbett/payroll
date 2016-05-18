@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 from payroll.models import Employee
 
@@ -33,3 +33,7 @@ def mylogin(request):
     print 'login',loginSuccess
     return render_to_response('payroll/home.html',{'login':loginSuccess,'error':errors})
 
+
+def mylogout(request):
+   logout(request) 
+   return render_to_response('payroll/home.html',{'login':False,'error':False})
