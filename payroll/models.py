@@ -28,16 +28,28 @@ class Employee(models.Model):
     type = models.ForeignKey( 'EmployeeType' )
     phoneNumber = models.CharField( "手机号",max_length=20 )
     salaryPerHour = models.FloatField()
+    employeeId = models.CharField(max_length=20,null=True,unique=True)
     department = models.ForeignKey( 'Department' )
     def __unicode__(self):
         return self.name
     # 设置员工号为   部门号+员工种类+后续数字  的组合
-    @property
-    def employeeId(self):
+    def save(self,*args,**kwargs):
         departmentId = unicode(self.department_id)
         departmentId = u'0'+departmentId if len(departmentId)<2 else departmentId
         typeId = unicode(self.type_id)
         typeId = u'0'+typeId if len(typeId)<2 else typeId
         sid = unicode(self.id)
         sid = u'0'*(4-len(sid))+sid if len(sid)<4 else sid
-        return u"%s%s%s"%(departmentId,typeId,sid)
+        self.employeeId=u"%s%s%s"%(departmentId,typeId,sid)
+        super(Employee,self).save(*args,**kwargs)
+
+    def create(self,*args,**kwargs):
+        departmentId = unicode(self.department_id)
+        departmentId = u'0'+departmentId if len(departmentId)<2 else departmentId
+        typeId = unicode(self.type_id)
+        typeId = u'0'+typeId if len(typeId)<2 else typeId
+        sid = unicode(self.id)
+        sid = u'0'*(4-len(sid))+sid if len(sid)<4 else sid
+        self.employeeId=u"%s%s%s"%(departmentId,typeId,sid)
+        super(Employee,self).create(*args,**kwargs)
+

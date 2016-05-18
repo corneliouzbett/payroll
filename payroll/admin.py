@@ -2,7 +2,7 @@ from django.contrib import admin
 from models import *
 
 class DepartmentAdmin(admin.ModelAdmin):
-    list_displays=('name')
+    list_displays=('name',)
     search_fields=('name',)
 
 class EmployeeAdmin(admin.ModelAdmin):
@@ -10,7 +10,7 @@ class EmployeeAdmin(admin.ModelAdmin):
     search_fields=('id','name')
 
 class EmployeeTypeAdmin(admin.ModelAdmin):
-    list_displays=('name')
+    list_displays=('name',)
     search_fields=('name',)
 
 admin.site.register(Department,DepartmentAdmin)

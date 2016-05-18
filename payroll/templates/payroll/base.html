@@ -11,6 +11,7 @@
         <title>{%block title%}{%endblock%}</title>
         <!-- Bootstrap core CSS -->
         <link href="{% static 'payroll/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'payroll/main.css' %}" rel="stylesheet">
         <!-- Custom styles for this template -->
         <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
         <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -92,7 +93,14 @@
             </div>
         </div><!-- /.modal-content -->
         {% block content %}{% endblock %}
-        {% block footer %}{% endblock %}
+
+        <div class="container footer">
+            <div class="text-center footer_msg">©copyright 2016 PAYROLL | 方品 </div> 
+        </div>
+
+
+
+
         <script src="{% static 'payroll/jquery/jquery.min.js' %}"></script>
         <script src="{% static 'payroll/bootstrap/js/bootstrap.min.js' %}"></script>
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->

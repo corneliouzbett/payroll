@@ -12,14 +12,12 @@ def mylogin(request):
     errors = False
     loginSuccess = False
     if request.method == 'POST':
-        employeeId = request.POST['username']
-        em = Employee.objects.get( pk = 2 )
-        u = em.user
-        username = u.username
-        # except Exception:
-            # errors = True
-            # print 'Exception'
-        password = request.POST['password']
+        try:
+            employeeId = request.POST['username']
+            username = Employee.objects.get( employeeId=employeeId ).user.username
+            password = request.POST['password']
+        except Exception:
+            errors = True
         user = authenticate( username = username ,password = password )
         if user is not None:
             if user.is_active:
