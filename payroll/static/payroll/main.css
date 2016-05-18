@@ -1,0 +1,12 @@
+.footer {
+    position: absolute;
+    bottom: 0; 
+    padding-bottom: 20px;
+    padding-top: 20px;
+    background: black;
+    width: 100%
+} 
+
+.footer_msg{
+    color: #777
+}
