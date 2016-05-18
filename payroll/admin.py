@@ -2,18 +2,17 @@ from django.contrib import admin
 from models import *
 
 class DepartmentAdmin(admin.ModelAdmin):
-    list_displays=('department_id','department_name')
-    search_fields=('department_name','department_id')
+    list_displays=('name')
+    search_fields=('name',)
 
 class EmployeeAdmin(admin.ModelAdmin):
-    list_display=('id','name')
+    list_display=('employeeId','name')
     search_fields=('id','name')
-    exlude=('username')
 
-class Employee_typeAdmin(admin.ModelAdmin):
-    list_displays=('employee_type_id','employee_type')
-    search_fields=('employee_type','employee_type_id')
+class EmployeeTypeAdmin(admin.ModelAdmin):
+    list_displays=('name')
+    search_fields=('name',)
 
 admin.site.register(Department,DepartmentAdmin)
 admin.site.register(Employee,EmployeeAdmin)
-admin.site.register(Employee_type,Employee_typeAdmin)
+admin.site.register(EmployeeType,EmployeeTypeAdmin)
