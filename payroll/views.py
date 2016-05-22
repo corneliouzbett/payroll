@@ -35,3 +35,6 @@ def mylogin(request):
 def mylogout(request):
    logout(request) 
    return render_to_response('payroll/home.html',{'login':False,'error':False})
+
+def person(request):
+    return render_to_response('payroll/person.html',{})

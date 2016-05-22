@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 
 class EmployeeType(models.Model):
     name = models.CharField( verbose_name="员工种类", max_length=20, unique=True )
+    salaryPerDay = models.FloatField( "日薪",null=True ) 
     def __unicode__(self):
         return self.name
 
@@ -26,10 +27,10 @@ class Employee(models.Model):
     name =  models.CharField( max_length=20 )
     sex = models.CharField( verbose_name='性别',max_length=1,choices=sex_choices,default='m' )
     type = models.ForeignKey( 'EmployeeType' )
-    phoneNumber = models.CharField( "手机号",max_length=20 )
-    salaryPerHour = models.FloatField()
+    phoneNumber = models.CharField( "手机号",max_length=20,null=True )
     employeeId = models.CharField(max_length=20,null=True,unique=True)
     department = models.ForeignKey( 'Department' )
+    bankCount = models.CharField( max_length=20 )
     def __unicode__(self):
         return self.name
     # 设置员工号为   部门号+员工种类+后续数字  的组合
@@ -53,3 +54,38 @@ class Employee(models.Model):
         self.employeeId=u"%s%s%s"%(departmentId,typeId,sid)
         super(Employee,self).create(*args,**kwargs)
 
+
+
+class AttendRecord(models.Model):
+    date=models.DateField()
+    hour=models.IntegerField(default=8)
+    employee = models.ForeignKey( 'Employee' )
+    def __unicode__(self):
+        return unicode(self.employee)+" "+unicode(self.date)
+
+
+class Notice(models.Model):
+    title =  models.CharField(max_length=255)
+    content = models.TextField()
+    pubdate = models.DateField(auto_now=True)
+    def __unicode__(self):
+        return unicode(self.title)
+    
+
+class Post(models.Model):
+    title =  models.CharField(max_length=255)
+    content = models.TextField()
+    pubdate = models.DateField(auto_now=True)
+    employee = models.ForeignKey('Employee')
+    def __unicode__(self):
+        return unicode(self.title)
+
+
+class Comment(models.Model):
+    pubdate = models.DateField(auto_now=True)
+    content = models.TextField()
+    employee = models.ForeignKey( 'Employee' )
+    post = models.ForeignKey( 'Post' )
+    def __unicode__(self):
+        return unicode(self.employee) 
+    

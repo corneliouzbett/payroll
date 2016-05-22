@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^home/$',payroll_view.home,name='home'),
     url(r'^login',payroll_view.mylogin,name='login'),
     url(r'^logout',payroll_view.mylogout,name='logout'),
+    url(r'person',payroll_view.person,name='person'),
 ]

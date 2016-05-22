@@ -16,3 +16,7 @@ class EmployeeTypeAdmin(admin.ModelAdmin):
 admin.site.register(Department,DepartmentAdmin)
 admin.site.register(Employee,EmployeeAdmin)
 admin.site.register(EmployeeType,EmployeeTypeAdmin)
+admin.site.register(AttendRecord)
+admin.site.register(Notice)
+admin.site.register(Post)
+admin.site.register(Comment)
