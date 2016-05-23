@@ -2,146 +2,104 @@
 {% block title %}个人主页{% endblock %}
 {% block content %}
 <div class="container-fluid after-navbar">
-	<div class="row-fluid">
-		<div class="span12">
-			<ul class="nav nav-tabs">
-				<li class="active">
-					<a href="#">个人信息</a>
-				</li>
-				<li>
-					<a href="#">我的出勤表</a>
-				</li>
-				<li>
-					<a href="#">我的工资单</a>
-				</li>
-			</ul>
-			<div class="hero-unit">
-				<h1>
-                    Hello, {{user.name}}!
-				</h1>
-				<p>
-                    
-                </p>
-				<p>
-					<a class="btn btn-primary btn-large" href="#">更改信息</a>
-				</p>
-			</div>
-			<table class="table table-hover">
-				<thead>
-					<tr>
-						<th>
-							编号
-						</th>
-						<th>
-							产品
-						</th>
-						<th>
-							交付时间
-						</th>
-						<th>
-							状态
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>
-							1
-						</td>
-						<td>
-							TB - Monthly
-						</td>
-						<td>
-							01/04/2012
-						</td>
-						<td>
-							Default
-						</td>
-					</tr>
-					<tr class="success">
-						<td>
-							1
-						</td>
-						<td>
-							TB - Monthly
-						</td>
-						<td>
-							01/04/2012
-						</td>
-						<td>
-							Approved
-						</td>
-					</tr>
-					<tr class="error">
-						<td>
-							2
-						</td>
-						<td>
-							TB - Monthly
-						</td>
-						<td>
-							02/04/2012
-						</td>
-						<td>
-							Declined
-						</td>
-					</tr>
-					<tr class="warning">
-						<td>
-							3
-						</td>
-						<td>
-							TB - Monthly
-						</td>
-						<td>
-							03/04/2012
-						</td>
-						<td>
-							Pending
-						</td>
-					</tr>
-					<tr class="info">
-						<td>
-							4
-						</td>
-						<td>
-							TB - Monthly
-						</td>
-						<td>
-							04/04/2012
-						</td>
-						<td>
-							Call in to confirm
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<div class="pagination pagination-centered">
-				<ul>
-					<li>
-						<a href="#">上一页</a>
-					</li>
-					<li>
-						<a href="#">1</a>
-					</li>
-					<li>
-						<a href="#">2</a>
-					</li>
-					<li>
-						<a href="#">3</a>
-					</li>
-					<li>
-						<a href="#">4</a>
-					</li>
-					<li>
-						<a href="#">5</a>
-					</li>
-					<li>
-						<a href="#">下一页</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
+    <div class="row-fluid">
+        <div class="span12">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active">
+                    <a href="#home" aria-controls="information" role="tab" data-toggle="tab">个人信息</a>
+                </li>
+                <li role="presentation">
+                    <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">出勤信息</a>
+                </li>
+                <li role="presentation">
+                    <a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">工资单</a>
+                </li>
+                <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="home">
+                    <div class="hero-unit">
+                        {% if changePassword %}
+                            <p class="text-success">密码更新成功</p>
+                        {% endif %}
+                        <h1>
+                            你好, {{employee.name}}
+                        </h1>
+                        <blockquote>
+                            <p>员工号:{{employee.employeeId}}</p>
+                            <p>性别:{% if employee.sex == 'm' %}男{% else %}女{% endif %}</p>
+                            <p>我的时薪:{{employee.type.salaryPerHour}}</p>
+                            <p>部门:{{employee.department.name}}</p>
+                            <p>手机号:{{employee.phoneNumber}}</p>
+                            <p>我的邮箱:{{employee.email}}</p>
+                            <p>工资领取账户:{{employee.bankCount}}</p>
+                        </blockquote>
+                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">更新信息</button>
+                        <div class="collapse" id="collapseExample">
+                            <div class="alert alert-success" role="alert">请保持个人信息正确无误</div>
+                            <div class="well">
+                                <form role="form" action="{% url 'payroll:maintainInfo' %}" method="post">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group {% if errors.0 %}has-error{% endif %}">
+                                                <label for="phoneNumber">电话号码{% if errors.0 %} <samll> 非法输入</small>{% endif %}</label>
+                                                <input type="text" class="form-control" name="phoneNumber" placeholder="{{employee.phoneNumber}}">
+                                            </div>
+                                            <div class="form-group {% if errors.1 %}has-error{% endif %}">
+                                                <label for="bankCount">工资领取账户{% if errors.1 %} <samll> 非法输入</small>{% endif %}</label>
+                                                <input type="text" class="form-control" name="bankCount" placeholder="{{employee.bankCount}}">
+                                            </div>
+                                            <div class="form-group {% if errors.2 %}has-error{% endif %}">
+                                                <label for="Email">邮箱{% if errors.2 %} <samll> 非法输入</small>{% endif %}</label>
+                                                <input type="email" class="form-control" name="email" placeholder="{{employee.email}}">
+                                            </div>
+                                            <select class="form-control" name="sex">
+                                                {% if employee.sex == 'm' %}
+                                                <option>男</option>
+                                                <option>女</option>
+                                                {% else %}
+                                                <option>女</option>
+                                                <option>男</option>
+                                                {% endif %}
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group {% if errors.3 %}has-error{% endif %}">
+                                                <label for="password0">现在的密码{% if errors.3 %} <samll> 密码错误</small>{% endif %}</label>
+                                                <input type="password" class="form-control" name="password0" placeholder="现在的密码">
+                                            </div>
+                                            <div class="form-group {% if errors.4 %}has-error{% endif %}">
+                                                <label for="password1">新密码{% if errors.4 %} <samll> 两次密码不一致</small>{% endif %}</label>
+                                                <input type="password" class="form-control" name="password1" placeholder="新密码">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="password2">确认密码</label>
+                                                <input type="password" class="form-control" name="password2" placeholder="重复密码">
+                                            </div>
+                                            <button type="submit" class="btn btn-success">确认修改</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="profile">
+                    <p>出勤表</p>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="messages"></div>
+                <div role="tabpanel" class="tab-pane" id="settings"></div>
+            </div>
+        </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block js %}
+    {% if errors.0 or errors.1 or errors.2 or errors.3 or errors.4 %}
+    $('.collapse').collapse()
+    {% endif %}
 {% endblock %}

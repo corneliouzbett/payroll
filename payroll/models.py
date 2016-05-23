@@ -1,4 +1,4 @@
-#coding=utf8
+#coding=utf-8
 from __future__ import unicode_literals
 
 from django.db import models
@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 class EmployeeType(models.Model):
     name = models.CharField( verbose_name="员工种类", max_length=20, unique=True )
-    salaryPerDay = models.FloatField( "日薪",null=True ) 
+    salaryPerHour = models.FloatField( "时薪" ) 
     def __unicode__(self):
         return self.name
 
@@ -30,6 +30,7 @@ class Employee(models.Model):
     phoneNumber = models.CharField( "手机号",max_length=20,null=True )
     employeeId = models.CharField(max_length=20,null=True,unique=True)
     department = models.ForeignKey( 'Department' )
+    email =  models.EmailField(null=True)
     bankCount = models.CharField( max_length=20 )
     def __unicode__(self):
         return self.name

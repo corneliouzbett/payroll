@@ -1,9 +1,6 @@
-.footer {
-    position: absolute;
-    bottom: 0; 
-    padding-bottom: 20px;
-    padding-top: 20px;
-    background: black;
+#footer {
+    padding-bottom: 50px;
+    padding-top: 50px;
     width: 100%
 } 
 

@@ -1,4 +1,4 @@
-#coding=utf8
+#coding=utf-8
 """mysite URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -18,8 +18,9 @@ from django.conf.urls import url
 import payroll.views as payroll_view
 
 urlpatterns = [
-    url(r'^home/$',payroll_view.home,name='home'),
+    url(r'^person',payroll_view.person,name='person'),
+    url(r'^home',payroll_view.home,name='home'),
     url(r'^login',payroll_view.mylogin,name='login'),
     url(r'^logout',payroll_view.mylogout,name='logout'),
-    url(r'person',payroll_view.person,name='person'),
+    url(r'^maintainInfo',payroll_view.maintainInfo,name='maintainInfo')
 ]
