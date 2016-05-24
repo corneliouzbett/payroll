@@ -12,6 +12,7 @@
         <!-- Bootstrap core CSS -->
         <link href="{% static 'payroll/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
         <link href="{% static 'payroll/main.css' %}" rel="stylesheet">
+        <link href="{% static 'payroll/jquery-ui.min.css' %}" rel="stylesheet">
         <!-- Custom styles for this template -->
         <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
         <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -70,6 +71,7 @@
 
         <script src="{% static 'payroll/jquery/jquery.min.js' %}"></script>
         <script src="{% static 'payroll/bootstrap/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'payroll/jquery-ui.min.js' %}"></script>
         <script type="text/javascript">
             {% if error|default:False %}
             $(function(){

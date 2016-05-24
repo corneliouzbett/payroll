@@ -23,7 +23,7 @@
                 <div role="tabpanel" class="tab-pane active" id="home">
                     <div class="hero-unit">
                         {% if changePassword %}
-                            <p class="text-success">密码更新成功</p>
+                        <p class="text-success">密码更新成功</p>
                         {% endif %}
                         <h1>
                             你好, {{employee.name}}
@@ -88,9 +88,43 @@
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="profile">
-                    <p>出勤表</p>
+                    <div class="container after-navbar">
+                        <div class="row">
+                            <div class="col-md-6 col-md-offset-3">
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <label for="from">从</label>
+                                        <input type="text" class="form-control" id="from" placeholder="起始时间">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="to">到</label>
+                                        <input type="text" class="form-control" id="to" placeholder="结束时间">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">查询</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div role="tabpanel" class="tab-pane" id="messages"></div>
+                <div role="tabpanel" class="tab-pane" id="messages">
+                    <div class="container after-navbar">
+                        <div class="row">
+                            <div class="col-md-6 col-md-offset-3">
+                                <form class="form-inline" action="{% url 'payroll:attend' %}" method="post">
+                                    <div class="form-group">
+                                        <label for="from">从</label>
+                                        <input type="text" class="form-control" id="from" placeholder="起始时间" name="from">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="to">到</label>
+                                        <input type="text" class="form-control" id="to" placeholder="结束时间" name="to">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">查询</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div role="tabpanel" class="tab-pane" id="settings"></div>
             </div>
         </div>
@@ -99,7 +133,29 @@
 {% endblock %}
 
 {% block js %}
-    {% if errors.0 or errors.1 or errors.2 or errors.3 or errors.4 %}
-    $('.collapse').collapse()
-    {% endif %}
+
+$(function() {
+$( "#from" ).datepicker({
+defaultDate: "+1w",
+changeMonth: true,
+numberOfMonths: 3,
+onClose: function( selectedDate ) {
+$( "#from" ).datepicker( "option", "minDate", selectedDate );
+$( "#from" ).datepicker( "option", "dateFormat", "yy-mm-dd" )
+}
+});
+$( "#to" ).datepicker({
+defaultDate: "+1w",
+changeMonth: true,
+numberOfMonths: 3,
+onClose: function( selectedDate ) {
+$( "#to" ).datepicker( "option", "maxDate", selectedDate );
+$( "#to" ).datepicker( "option", "dateFormat", "yy-mm-dd" )
+}
+});
+});
+
+{% if errors.0 or errors.1 or errors.2 or errors.3 or errors.4 %}
+$('.collapse').collapse()
+{% endif %}
 {% endblock %}

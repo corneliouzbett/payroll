@@ -28,7 +28,7 @@ class Employee(models.Model):
     sex = models.CharField( verbose_name='性别',max_length=1,choices=sex_choices,default='m' )
     type = models.ForeignKey( 'EmployeeType' )
     phoneNumber = models.CharField( "手机号",max_length=20,null=True )
-    employeeId = models.CharField(max_length=20,null=True,unique=True)
+    employeeId = models.CharField(blank=True,max_length=20,null=True,unique=True)
     department = models.ForeignKey( 'Department' )
     email =  models.EmailField(null=True)
     bankCount = models.CharField( max_length=20 )
@@ -36,6 +36,7 @@ class Employee(models.Model):
         return self.name
     # 设置员工号为   部门号+员工种类+后续数字  的组合
     def save(self,*args,**kwargs):
+        super(Employee,self).save(*args,**kwargs)
         departmentId = unicode(self.department_id)
         departmentId = u'0'+departmentId if len(departmentId)<2 else departmentId
         typeId = unicode(self.type_id)
@@ -46,6 +47,7 @@ class Employee(models.Model):
         super(Employee,self).save(*args,**kwargs)
 
     def create(self,*args,**kwargs):
+        super(Employee,self).create(*args,**kwargs)
         departmentId = unicode(self.department_id)
         departmentId = u'0'+departmentId if len(departmentId)<2 else departmentId
         typeId = unicode(self.type_id)
@@ -53,7 +55,7 @@ class Employee(models.Model):
         sid = unicode(self.id)
         sid = u'0'*(4-len(sid))+sid if len(sid)<4 else sid
         self.employeeId=u"%s%s%s"%(departmentId,typeId,sid)
-        super(Employee,self).create(*args,**kwargs)
+        super(Employee,self).save(*args,**kwargs)
 
 
 

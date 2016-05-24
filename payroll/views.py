@@ -1,4 +1,5 @@
 # coding=utf-8
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.contrib.auth import authenticate,login,logout
@@ -50,6 +51,7 @@ def mylogout(request):
    return render_to_response('payroll/home.html',{'login':False,'error':False})
 
 
+@login_required(login_url='/payroll/home')
 def person(request):
     user=request.user
     employee=user.employee
@@ -58,6 +60,7 @@ def person(request):
     return render_to_response('payroll/person.html',{'login':True,'user':user,'employee':employee})
 
 
+@login_required(login_url='/payroll/home')
 def maintainInfo(request):
     global phoneNumberRe
     global emailRe
@@ -121,6 +124,7 @@ def maintainInfo(request):
     return render_to_response('payroll/404.html',{})
 
 
+@login_required(login_url='/payroll/home')
 def aPost(request,id):
     try:
         id = int(id)
@@ -131,6 +135,7 @@ def aPost(request,id):
     return render_to_response('payroll/post.html',{'post':thePost,'comment':theComment})
 
 
+@login_required(login_url='/payroll/home')
 def aNotice(request,id):
     try:
         id =  int(id)
@@ -140,6 +145,7 @@ def aNotice(request,id):
     return render_to_response('payroll/theNotice.html',{'notice':theNotice})
 
 
+@login_required(login_url='/payroll/home')
 def allPost(request):
     post =  Post.objects.all()
     loginSuccess =  True
@@ -149,19 +155,13 @@ def allPost(request):
     return render_to_response('payroll/allPost.html',{'post':post,'login':loginSuccess})
 
 
+@login_required(login_url='/payroll/home')
 def allNotice(request):
     notice =  Notice.objects.all()
-    loginSuccess =  True
-    try:
-        user = request.user
-        if not user.is_authenticated():
-            loginSuccess = False
-    except Exception:
-        render_to_response('payroll/404.html')
-    print notice
     return render_to_response('payroll/allNotice.html',{'notice':notice,'login':True})
 
 
+@login_required(login_url='/payroll/home')
 def makeComment(request,id):
     if request.method == 'POST':
         try:
@@ -175,4 +175,19 @@ def makeComment(request,id):
             return render_to_response('payroll/404.html')
     else:
         return render_to_response('payroll/404.html')
-    return render_to_response('payroll/post',{'post':thePost,'comment':comments})
+    return render_to_response('payroll/post.html',{'post':thePost,'comment':comments})
+
+@login_required(login_url='/payroll/home')
+def attend(request):
+    # if request.method == 'POST':
+        # try:
+            # startTime = request.POST['from']
+            # endTime = request.POST['to']
+            # user = request.user  
+            # recordTable = AttendRecord.objects.filter( employee=user.employee and pubdate__ge=datetime(startTime) \ 
+                                                     # and pubdate__le=datetime(endTime))
+        # except Exception:
+            # return render_to_response('payroll/404.html')
+        # return render_to_response('payroll/person.html',{})
+    # else:
+        return render_to_response('payroll/404.html',{'login':True,'user':user,'employee':employee})
