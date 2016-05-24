@@ -1,0 +1,18 @@
+{% extends 'payroll/base.html' %}
+{% block content %}
+<div class="container after-navbar">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-info">
+                <div class="panel-heading">notice.title</div>
+                <div class="panel-body">
+                    {{ notice.content }}
+                </div>
+                <div class="panel-footer">
+                    {{ notice.pubdate }}
+                </div>
+            </div> 
+        </div>
+    </div> 
+</div>
+{% endblock %}

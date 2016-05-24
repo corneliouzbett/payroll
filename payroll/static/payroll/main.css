@@ -1,14 +1,17 @@
 #footer {
     padding-bottom: 50px;
     padding-top: 50px;
-    width: 100%
+    width: 100%;
 } 
 
 .footer_msg{
-    color: #777
+    color: #777;
 }
 
 .after-navbar{
-    margin-top: 70px;
+    margin-top: 50px;
 }
 
+#home-img {
+    width: 100%;
+}

@@ -1,0 +1,17 @@
+{% extends 'payroll/base.html' %}
+{% block content %}
+<div class="container after-navbar">
+    {% for item in post %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-info">
+                <div class="panel-heading"><a href="{% url 'payroll:post' item.id %}">{{ item.title }}</a></div>
+                <div class="panel-body">
+                    {{ item.content }}
+                </div>
+            </div> 
+        </div>
+    </div> 
+    {% endfor %}
+</div>
+{% endblock %}

@@ -22,5 +22,10 @@ urlpatterns = [
     url(r'^home',payroll_view.home,name='home'),
     url(r'^login',payroll_view.mylogin,name='login'),
     url(r'^logout',payroll_view.mylogout,name='logout'),
-    url(r'^maintainInfo',payroll_view.maintainInfo,name='maintainInfo')
+    url(r'^maintainInfo',payroll_view.maintainInfo,name='maintainInfo'),
+    url(r'^post([0-9]+)',payroll_view.aPost,name="post"),
+    url(r'^notice([0-9]+)',payroll_view.aNotice,name="notice"),
+    url(r'^allPost',payroll_view.allPost,name='allPost'),
+    url(r'^allNotice',payroll_view.allNotice,name='allNotice'),
+    url(r'^makeComment([0-9]+)',payroll_view.makeComment,name='makeComment'),
 ]

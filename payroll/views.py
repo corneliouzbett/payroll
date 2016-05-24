@@ -3,20 +3,26 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
-from payroll.models import Employee
+from payroll.models import *
 import re
+import datetime
 
 emailRe = re.compile(r'^[\w\d]+[\w\d_\.]+@[\w\d]+\.[\w\d]+$')
 phoneNumberRe = re.compile(r'^1\d{10}$')
 bankCountRe = re.compile(r'^\d{16,19}$')
 
+
 def home(request):
-    return render_to_response('payroll/home.html',{'login':False,'error':False})
+    post = Post.objects.all()[:15]
+    notice =  Notice.objects.all()[:15]
+    return render_to_response('payroll/home.html',{'login':False,'error':False,'post':post,'notice':notice})
 
 
 def mylogin(request):
     errors = False
     loginSuccess = False
+    post = Post.objects.all()[:15]
+    notice =  Notice.objects.all()[:15]
     if request.method == 'POST':
         try:
             employeeId = request.POST['username']
@@ -36,12 +42,13 @@ def mylogin(request):
         else:
             errors = True
             return render_to_response('payroll/home.html',{'login':loginSuccess,'error':errors})
-    return render_to_response('payroll/home.html',{'login':loginSuccess,'error':errors})
+    return render_to_response('payroll/home.html',{'login':loginSuccess,'error':errors,'post':post,'notice':notice})
 
 
 def mylogout(request):
    logout(request) 
    return render_to_response('payroll/home.html',{'login':False,'error':False})
+
 
 def person(request):
     user=request.user
@@ -50,11 +57,11 @@ def person(request):
         return render_to_response('payroll/home.html',{'login':False,'error':False})
     return render_to_response('payroll/person.html',{'login':True,'user':user,'employee':employee})
 
+
 def maintainInfo(request):
     global phoneNumberRe
     global emailRe
     global bankCountRe
-    
     errors=[False for i in range(5)]
     try:
         if request.method == 'POST':
@@ -112,3 +119,60 @@ def maintainInfo(request):
     except Exception:
         render_to_response('payroll/404.html')
     return render_to_response('payroll/404.html',{})
+
+
+def aPost(request,id):
+    try:
+        id = int(id)
+        thePost = Post.objects.get( pk=id )
+        theComment = thePost.comment_set.all()
+    except Exception:
+        return render_to_response('payroll/404.html')
+    return render_to_response('payroll/post.html',{'post':thePost,'comment':theComment})
+
+
+def aNotice(request,id):
+    try:
+        id =  int(id)
+        theNotice = Notice.objects.get( pk=id )
+    except Exception:
+        return render_to_response('payroll/404.html')
+    return render_to_response('payroll/theNotice.html',{'notice':theNotice})
+
+
+def allPost(request):
+    post =  Post.objects.all()
+    loginSuccess =  True
+    user = request.user
+    if not user.is_authenticated():
+        loginSuccess = False
+    return render_to_response('payroll/allPost.html',{'post':post,'login':loginSuccess})
+
+
+def allNotice(request):
+    notice =  Notice.objects.all()
+    loginSuccess =  True
+    try:
+        user = request.user
+        if not user.is_authenticated():
+            loginSuccess = False
+    except Exception:
+        render_to_response('payroll/404.html')
+    print notice
+    return render_to_response('payroll/allNotice.html',{'notice':notice,'login':True})
+
+
+def makeComment(request,id):
+    if request.method == 'POST':
+        try:
+            id = int(id)
+            user = request.user
+            thePost = Post.objects.get( pk=id )
+            print request.POST
+            theComment = Comment.objects.create( content=request.POST['mycomment'],pubdate=datetime.datetime.now(),employee=user.employee,post=thePost )
+            comments = thePost.comment_set.all()
+        except Exception:
+            return render_to_response('payroll/404.html')
+    else:
+        return render_to_response('payroll/404.html')
+    return render_to_response('payroll/post',{'post':thePost,'comment':comments})

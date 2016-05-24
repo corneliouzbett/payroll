@@ -1,0 +1,21 @@
+{% extends 'payroll/base.html' %}
+{% block content %}
+<div class="container after-navbar">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-info">
+                <div class="panel-heading">所有通知</div>
+                <div class="panel-body">
+                    <ol>
+                        {% for item in notice %}
+                        <li><a href="{% url 'payroll:notice' item.id %}">
+                                {{item.title}}<small>({{item.pubdate}})</small>
+                            </a></li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div> 
+        </div>
+    </div> 
+</div>
+{% endblock %}
