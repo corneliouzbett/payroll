@@ -80,6 +80,9 @@ class Post(models.Model):
     content = models.TextField()
     pubdate = models.DateField(auto_now=True)
     employee = models.ForeignKey('Employee')
+    modifyDateTime = models.DateTimeField(auto_now=True)
+    class Meta:
+        ordering = ['-modifyDateTime']
     def __unicode__(self):
         return unicode(self.title)
 
@@ -92,3 +95,12 @@ class Comment(models.Model):
     def __unicode__(self):
         return unicode(self.employee) 
     
+
+
+class Payroll(models.Model):
+    employee = models.ForeignKey('Employee')
+    year = models.IntegerField()
+    month = models.IntegerField()
+    employeeType = models.ForeignKey('EmployeeType')
+    hour = models.IntegerField()
+    salary = models.FloatField()

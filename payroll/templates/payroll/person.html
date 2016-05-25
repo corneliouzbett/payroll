@@ -5,22 +5,22 @@
     <div class="row-fluid">
         <div class="span12">
             <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
+            <ul class="nav nav-tabs" role="tablist" id="myTab">
                 <li role="presentation" class="active">
-                    <a href="#home" aria-controls="information" role="tab" data-toggle="tab">个人信息</a>
+                    <a href="#information" aria-controls="information" role="tab" data-toggle="tab">个人信息</a>
                 </li>
                 <li role="presentation">
-                    <a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">出勤信息</a>
+                    <a href="#attend" aria-controls="attend" role="tab" data-toggle="tab">出勤信息</a>
                 </li>
                 <li role="presentation">
-                    <a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">工资单</a>
+                    <a href="#payroll" aria-controls="payroll" role="tab" data-toggle="tab">工资单</a>
                 </li>
-                <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+                <li role="presentation"><a href="#participate" aria-controls="participate" role="tab" data-toggle="tab">我参与的</a></li>
             </ul>
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="home">
+                <div role="tabpanel" class="tab-pane active" id="information">
                     <div class="hero-unit">
                         {% if changePassword %}
                         <p class="text-success">密码更新成功</p>
@@ -87,37 +87,54 @@
                         </div>
                     </div>
                 </div>
-                <div role="tabpanel" class="tab-pane" id="profile">
-                    <div class="container after-navbar">
-                        <div class="row">
-                            <div class="col-md-6 col-md-offset-3">
-                                <form class="form-inline">
-                                    <div class="form-group">
-                                        <label for="from">从</label>
-                                        <input type="text" class="form-control" id="from" placeholder="起始时间">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="to">到</label>
-                                        <input type="text" class="form-control" id="to" placeholder="结束时间">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">查询</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="messages">
+                <div role="tabpanel" class="tab-pane" id="attend">
                     <div class="container after-navbar">
                         <div class="row">
                             <div class="col-md-6 col-md-offset-3">
                                 <form class="form-inline" action="{% url 'payroll:attend' %}" method="post">
                                     <div class="form-group">
-                                        <label for="from">从</label>
-                                        <input type="text" class="form-control" id="from" placeholder="起始时间" name="from">
+                                        <label for="from1">从</label>
+                                        <input type="text" class="form-control" id="from1" placeholder="起始时间" name="from1">
                                     </div>
                                     <div class="form-group">
-                                        <label for="to">到</label>
-                                        <input type="text" class="form-control" id="to" placeholder="结束时间" name="to">
+                                        <label for="to1">到</label>
+                                        <input type="text" class="form-control" id="to1" placeholder="结束时间" name="to1">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">查询</button>
+                                </form>
+                                <table class="table table-striped">
+                                    <caption>出勤信息</caption>
+                                    <thead>
+                                        <tr>
+                                            <th>日期</th>
+                                            <th>工作时长</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in record %}
+                                        <tr>
+                                            <td>{{item.date}}</td>
+                                            <td>{{item.hour}}小时</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="payroll">
+                    <div class="container after-navbar">
+                        <div class="row">
+                            <div class="col-md-6 col-md-offset-3">
+                                <form class="form-inline" action="#" method="post">
+                                    <div class="form-group">
+                                        <label for="from2">从</label>
+                                        <input type="text" class="form-control" id="from2" placeholder="起始时间" name="from2">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="to2">到</label>
+                                        <input type="text" class="form-control" id="to2" placeholder="结束时间" name="to2">
                                     </div>
                                     <button type="submit" class="btn btn-primary">查询</button>
                                 </form>
@@ -125,7 +142,40 @@
                         </div>
                     </div>
                 </div>
-                <div role="tabpanel" class="tab-pane" id="settings"></div>
+                <div role="tabpanel" class="tab-pane" id="participate">
+                    <div class="container after-navbar">
+                        <div class="row">
+                            <div class='col-md-5 col-md-offset-1'>
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">我发布的帖子</div>
+                                    <div class="panel-body">
+                                        <ul>
+                                            {% for item in myPost %}
+                                            <li><a href="{% url 'payroll:post' item.id %}">
+                                                    {{item.title}}<small>({{item.pubdate}})</small>
+                                                </a></li>
+                                                {% endfor %}
+                                        </ul>
+                                    </div> 
+                                </div> 
+                            </div>
+                            <div class="col-md-5 col-md-offset-1">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">我评论过的</div>
+                                    <div class="panel-body">
+                                        <ul>
+                                            {% for item in myComment %}
+                                            <li><a href="{% url 'payroll:post' item.post.id %}">
+                                                    {{item.post.title}}<small>({{item.pubdate}})</small>
+                                                </a></li>
+                                                {% endfor %}
+                                        </ul>
+                                    </div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -135,23 +185,39 @@
 {% block js %}
 
 $(function() {
-$( "#from" ).datepicker({
-defaultDate: "+1w",
+$(function () {
+$('#myTab li:eq({{num}}) a').tab('show');
+});
+
+$( "#from1" ).datepicker({
+defaultDate: "-3w",
 changeMonth: true,
+changeYear: true,
 numberOfMonths: 3,
 onClose: function( selectedDate ) {
-$( "#from" ).datepicker( "option", "minDate", selectedDate );
-$( "#from" ).datepicker( "option", "dateFormat", "yy-mm-dd" )
+$( "#from1" ).datepicker( "option", "minDate", selectedDate );
+$( "#from1" ).datepicker( "option", "dateFormat", "yy-mm-dd" )
 }
 });
-$( "#to" ).datepicker({
-defaultDate: "+1w",
+$( "#to1" ).datepicker({
+defaultDate: "-3w",
 changeMonth: true,
+changeYear: true,
 numberOfMonths: 3,
 onClose: function( selectedDate ) {
-$( "#to" ).datepicker( "option", "maxDate", selectedDate );
-$( "#to" ).datepicker( "option", "dateFormat", "yy-mm-dd" )
+$( "#to1" ).datepicker( "option", "maxDate", selectedDate );
+$( "#to1" ).datepicker( "option", "dateFormat", "yy-mm-dd" )
 }
+});
+$( "#from2" ).datepicker({
+changeMonth: true,
+changeYear: true,
+dateFormat: 'yy-mm',
+});
+$( "#to2" ).datepicker({
+changeMonth: true,
+changeYear: true,
+dateFormat: 'yy-mm',
 });
 });
 

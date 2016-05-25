@@ -18,7 +18,7 @@ from django.conf.urls import url
 import payroll.views as payroll_view
 
 urlpatterns = [
-    url(r'^person',payroll_view.person,name='person'),
+    url(r'^person([1-4]{1})',payroll_view.person,name='person'),
     url(r'^home',payroll_view.home,name='home'),
     url(r'^login',payroll_view.mylogin,name='login'),
     url(r'^logout',payroll_view.mylogout,name='logout'),
@@ -29,4 +29,5 @@ urlpatterns = [
     url(r'^allNotice',payroll_view.allNotice,name='allNotice'),
     url(r'^makeComment([0-9]+)',payroll_view.makeComment,name='makeComment'),
     url(r'^attend',payroll_view.attend,name='attend'),
+    url(r'makePost',payroll_view.makePost,name='makePost'),
 ]
