@@ -29,5 +29,6 @@ urlpatterns = [
     url(r'^allNotice',payroll_view.allNotice,name='allNotice'),
     url(r'^makeComment([0-9]+)',payroll_view.makeComment,name='makeComment'),
     url(r'^attend',payroll_view.attend,name='attend'),
-    url(r'makePost',payroll_view.makePost,name='makePost'),
+    url(r'^makePost',payroll_view.makePost,name='makePost'),
+    url(r'^getPayroll',payroll_view.getPayroll,name='getPayroll'),
 ]

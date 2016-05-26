@@ -83,61 +83,71 @@ def maintainInfo(request):
     global emailRe
     global bankCountRe
     errors=[False for i in range(5)]
-    try:
-        if request.method == 'POST':
-            phoneNumber = request.POST['phoneNumber']
-            bankCount =  request.POST['bankCount']
-            email =  request.POST['email']
-            sex = request.POST['sex']
-            password0 =  request.POST['password0']
-            password1 =  request.POST['password1']
-            password2 = request.POST['password2']
-            user = request.user
-            if not user.is_authenticated():
-                return render_to_response('payroll/home.html',{'login':False,'error':False})
-            employee = user.employee
-            if phoneNumber:
-                if phoneNumberRe.match(phoneNumber) == None:
-                    errors[0]=True
-                else:
-                    employee.phoneNumber = phoneNumber
-                    employee.save()
-            if bankCount:
-                if bankCountRe.match(bankCount) == None:
-                    errors[1] = True
-                else:
-                    employee.bankCount = bankCount
-                    employee.save()
-            if email:
-                if emailRe.match(email) == None:
-                    errors[2] = True
-                else:
-                    employee.email = email
-                    employee.save()
-            if sex == u'男':
-                employee.sex='m'
-                employee.save()
+    user = request.user
+    employee = user.employee
+    myPost = Post.objects.filter(employee=employee)
+    tmpComment = Comment.objects.filter(employee=employee)
+    tmpId = []
+    myComment = []
+    for item in tmpComment:
+        if item.post.id not in tmpId:
+            tmpId.append(item.post.id)
+            myComment.append(item)
+    # try:
+    if request.method == 'POST':
+        phoneNumber = request.POST['phoneNumber']
+        bankCount =  request.POST['bankCount']
+        email =  request.POST['email']
+        sex = request.POST['sex']
+        password0 =  request.POST['password0']
+        password1 =  request.POST['password1']
+        password2 = request.POST['password2']
+        user = request.user
+        if not user.is_authenticated():
+            return render_to_response('payroll/home.html',{'login':False,'error':False})
+        employee = user.employee
+        if phoneNumber:
+            if phoneNumberRe.match(phoneNumber) == None:
+                errors[0]=True
             else:
-                employee.sex='f'
+                employee.phoneNumber = phoneNumber
                 employee.save()
-            if password0 and password1 and password2:
-                if password1 != password2:
-                    errors[4]=True
-                else:
-                    username = user.username
-                    password = password0
-                    user = authenticate( username = username ,password = password )
-                    if user is not None:
-                        if user.is_active:
-                            user.set_password(password1)
-                            return render_to_response('payroll/person.html',{'login':True,'user':user,'employee':employee,'errors':errors,"changePassword":True})
-                    else:
-                        errors[3] = True
-            elif password0 or password1 or password2:
+        if bankCount:
+            if bankCountRe.match(bankCount) == None:
+                errors[1] = True
+            else:
+                employee.bankCount = bankCount
+                employee.save()
+        if email:
+            if emailRe.match(email) == None:
+                errors[2] = True
+            else:
+                employee.email = email
+                employee.save()
+        if sex == u'男':
+            employee.sex='m'
+            employee.save()
+        else:
+            employee.sex='f'
+            employee.save()
+        if password0 and password1 and password2:
+            if password1 != password2:
                 errors[4]=True
-            return render_to_response('payroll/person.html',{'login':True,'user':user,'employee':employee,'errors':errors})
-    except Exception:
-        render_to_response('payroll/404.html')
+            else:
+                username = user.username
+                password = password0
+                user = authenticate( username = username ,password = password )
+                if user is not None:
+                    if user.is_active:
+                        user.set_password(password1)
+                        return render_to_response('payroll/person.html',{'login':True,'user':user,'employee':employee,'errors':errors,"changePassword":True,'myPost':myPost,'myComment':myComment})
+                else:
+                    errors[3] = True
+        elif password0 or password1 or password2:
+            errors[4]=True
+        return render_to_response('payroll/person.html',{'login':True,'user':user,'employee':employee,'errors':errors,'myComment':myComment,'myPost':myPost})
+    # except Exception:
+        # render_to_response('payroll/404.html')
     return render_to_response('payroll/404.html',{})
 
 
@@ -199,16 +209,24 @@ def makeComment(request,id):
 @login_required(login_url='/payroll/home')
 def attend(request):
     if request.method == 'POST':
+        user = request.user  
+        employee = user.employee
+        myPost = Post.objects.filter(employee=employee)
+        tmpComment = Comment.objects.filter(employee=employee)
+        tmpId = []
+        myComment = []
+        for item in tmpComment:
+            if item.post.id not in tmpId:
+                tmpId.append(item.post.id)
+                myComment.append(item)
         # try:
-            print request.POST
             st = request.POST['from1'].split('-')
             et = request.POST['to1'].split('-')
-            user = request.user  
             recordTable = AttendRecord.objects.filter( employee=user.employee ).filter( date__gte = datetime(int(st[0]),int(st[1]),int(st[2])) ).filter( date__lte = datetime(int(et[0]),int(et[1]),int(et[2])) ).order_by('date')
             print recordTable
         # except Exception:
             # return render_to_response('payroll/404.html')
-            return render_to_response('payroll/person.html',{'login':True,'user':user,'employee':user.employee,'record':recordTable,'num':1})
+            return render_to_response('payroll/person.html',{'login':True,'user':user,'employee':user.employee,'record':recordTable,'num':1,'myPost':myPost,'myComment':myComment})
     else:
         return render_to_response('payroll/404.html',)
 
@@ -221,3 +239,34 @@ def makePost(request):
     Post.objects.create( title=postTitle,content=postContent,employee=user.employee )
     post = Post.objects.all()
     return render_to_response('payroll/allPost.html',{'post':post,'login':True})
+
+
+@login_required(login_url='/payroll/home')
+def getPayroll(request):
+    if request.method == 'POST':
+        dateFrom = request.POST['from2'].split('-')
+        dateTo =  request.POST['to2'].split('-')
+        yearFrom = int(dateFrom[0])
+        monthFrom = int(dateFrom[1])
+        yearTo = int(dateTo[0])
+        monthTo = int(dateTo[1])
+        if yearFrom*12 + monthFrom <= yearTo*12 + monthTo:
+            # report = Payroll.objects.filter(employee=request.user.employee).filter( yearFrom*12+monthFrom <= year*12+month ).filter(year*12+month <= yearTo*12+monthTo)
+            report = Payroll.objects.raw('''
+                                         select * from payroll_payroll
+                                         where %s+%s <= year*12+month and 
+                                               year*12+month <= %s*12+%s and employee_id=%s
+                                         ''',[yearFrom*12,monthFrom,yearTo*12,monthTo,request.user.employee.id])
+            employee = request.user.employee
+            myPost = Post.objects.filter(employee=employee)
+            tmpComment = Comment.objects.filter(employee=employee)
+            tmpId = []
+            myComment = []
+            for item in tmpComment:
+                if item.post.id not in tmpId:
+                    tmpId.append(item.post.id)
+                    myComment.append(item)
+            return render_to_response('payroll/person.html',{'login':True,'user':request.user,'employee':\
+                                request.user.employee,'num':2,'myPost':myPost,'myComment':myComment,'report':report})
+    else:
+        return render_to_response('payroll/404.html')

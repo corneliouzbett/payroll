@@ -127,7 +127,7 @@
                     <div class="container after-navbar">
                         <div class="row">
                             <div class="col-md-6 col-md-offset-3">
-                                <form class="form-inline" action="#" method="post">
+                                <form class="form-inline" action="{% url 'payroll:getPayroll' %}" method="post">
                                     <div class="form-group">
                                         <label for="from2">从</label>
                                         <input type="text" class="form-control" id="from2" placeholder="起始时间" name="from2">
@@ -138,6 +138,35 @@
                                     </div>
                                     <button type="submit" class="btn btn-primary">查询</button>
                                 </form>
+                            </div>
+                        </div>
+                        <div clas="row">
+                            <div class="col-md-6 col-md-offset-3">
+                               <table class="table table-striped">
+                                    <caption>工资表</caption>
+                                    <thead>
+                                        <tr>
+                                            <th>年份</th>
+                                            <th>月份</th>
+                                            <th>工作时长</th>
+                                            <th>员工类别</th>
+                                            <th>时薪</th>
+                                            <th>工资</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in report %}
+                                        <tr>
+                                            <td>{{item.year}}</td>
+                                            <td>{{item.month}}</td>
+                                            <td>{{item.hour}}</td>
+                                            <td>{{item.employee.type}}</td>
+                                            <td>{{item.employee.type.salaryPerHour}}</td>
+                                            <td>{{item.salary}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table> 
                             </div>
                         </div>
                     </div>
@@ -225,3 +254,4 @@ dateFormat: 'yy-mm',
 $('.collapse').collapse()
 {% endif %}
 {% endblock %}
+                                    <caption>年份</caption>
