@@ -132,3 +132,8 @@ STATICFILES_DIRS=(
 os.path.join(BASE_DIR,"static"),
 
 )
+
+
+EMAIL_HOST_USER = 'payroll@gmail.com'
+EMAIL_HOST_PASSWORD = 'password'
+EMAIL_USE_SSL = True

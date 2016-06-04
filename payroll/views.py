@@ -61,8 +61,8 @@ def mylogout(request):
 @login_required(login_url='/payroll/home')
 def person(request,id):
     id = int(id)
-    user=request.user
-    employee=user.employee
+    user = request.user
+    employee = user.employee
     myPost = Post.objects.filter(employee=employee)
     tmpComment = Comment.objects.filter(employee=employee)
     tmpId = []
@@ -191,17 +191,14 @@ def allNotice(request):
 @login_required(login_url='/payroll/home')
 def makeComment(request,id):
     if request.method == 'POST':
-        try:
-            id = int(id)
-            user = request.user
-            thePost = Post.objects.get( pk=id )
-            thePost.modifyDateTime =  datetime.datetime.now()
-            thePost.save()
-            print request.POST
-            theComment = Comment.objects.create( content=request.POST['mycomment'],pubdate=datetime.datetime.now(),employee=user.employee,post=thePost )
-            comments = thePost.comment_set.all()
-        except Exception:
-            return render_to_response('payroll/404.html')
+        id = int(id)
+        user = request.user
+        thePost = Post.objects.get( pk=id )
+        thePost.modifyDateTime = datetime.now()
+        thePost.save()
+        print request.POST
+        theComment = Comment.objects.create( content=request.POST['mycomment'],pubdate=datetime.now(),employee=user.employee,post=thePost )
+        comments = thePost.comment_set.all()
     else:
         return render_to_response('payroll/404.html')
     return render_to_response('payroll/post.html',{'post':thePost,'comment':comments})
@@ -219,14 +216,10 @@ def attend(request):
             if item.post.id not in tmpId:
                 tmpId.append(item.post.id)
                 myComment.append(item)
-        # try:
-            st = request.POST['from1'].split('-')
-            et = request.POST['to1'].split('-')
-            recordTable = AttendRecord.objects.filter( employee=user.employee ).filter( date__gte = datetime(int(st[0]),int(st[1]),int(st[2])) ).filter( date__lte = datetime(int(et[0]),int(et[1]),int(et[2])) ).order_by('date')
-            print recordTable
-        # except Exception:
-            # return render_to_response('payroll/404.html')
-            return render_to_response('payroll/person.html',{'login':True,'user':user,'employee':user.employee,'record':recordTable,'num':1,'myPost':myPost,'myComment':myComment})
+        st = request.POST['from1'].split('-')
+        et = request.POST['to1'].split('-')
+        recordTable = AttendRecord.objects.filter( employee=user.employee ).filter( date__gte = datetime(int(st[0]),int(st[1]),int(st[2])) ).filter( date__lte = datetime(int(et[0]),int(et[1]),int(et[2])) ).order_by('date')
+        return render_to_response('payroll/person.html',{'login':True,'user':user,'employee':user.employee,'record':recordTable,'num':1,'myPost':myPost,'myComment':myComment})
     else:
         return render_to_response('payroll/404.html',)
 

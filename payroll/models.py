@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import time
+from django.core.mail import send_mail
 
 
 class EmployeeType(models.Model):
@@ -61,10 +63,22 @@ class Employee(models.Model):
 
 class AttendRecord(models.Model):
     date=models.DateField()
-    hour=models.IntegerField(default=8)
+    start = models.TimeField()
+    end = models.TimeField()
+    hour = models.FloatField(null=True,blank=True)
     employee = models.ForeignKey( 'Employee' )
     def __unicode__(self):
         return unicode(self.employee)+" "+unicode(self.date)
+    def save(self,*args,**kwargs):
+        super(AttendRecord,self).save(*args,**kwargs)
+        self.hour = (self.end.hour*60.0 + self.end.minute*1.0 - self.start.hour*60.0 - self.start.minute*1.0)/60.0
+        self.hour = float("%.1f"%(self.hour,))
+        super(AttendRecord,self).save(*args,**kwargs)
+    def create(self,*args,**kwargs):
+        super(AttendRecord,self).create(*args,**kwargs)
+        self.hour = (self.end.hour*60.0 + self.end.minute*1.0 - self.start.hour*60.0 - self.start.minute*1.0)/60.0
+        self.hour = float("%.1f"%(self.hour,))
+        super(AttendRecord,self).create(*args,**kwargs)
 
 
 class Notice(models.Model):
@@ -104,3 +118,11 @@ class Payroll(models.Model):
     employeeType = models.ForeignKey('EmployeeType')
     hour = models.IntegerField()
     salary = models.FloatField()
+    def save(self,*args,**kwargs):
+        super(Payroll,self).save(*args,**kwargs)
+        subject = u'工资单'
+        message = u'''
+                        %s 您好！您本月共工作 %f 小时，应领取工资 %f 元，工资已经发送到您预留的银行账户 %s 中，请注意查收。
+                        您也可以登录公司管理系统，在个人页面中核对本月的详细工作记录。
+                        '''%(self.employee.name, self.hour, self.employee.bankCount)
+        send_mail(subject, message, EMAIL_HOST_USER, self.employee.email, fail_silently=False)
