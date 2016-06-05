@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
+from django.db.models import Sum
 from payroll.models import *
 import re
 from datetime import datetime
@@ -201,7 +202,7 @@ def makeComment(request,id):
         comments = thePost.comment_set.all()
     else:
         return render_to_response('payroll/404.html')
-    return render_to_response('payroll/post.html',{'post':thePost,'comment':comments})
+    return render_to_response('payroll/post.html',{'post':thePost,'comment':comments,'login':True})
 
 @login_required(login_url='/payroll/home')
 def attend(request):
@@ -263,3 +264,53 @@ def getPayroll(request):
                                 request.user.employee,'num':2,'myPost':myPost,'myComment':myComment,'report':report})
     else:
         return render_to_response('payroll/404.html')
+
+
+
+def adminLogin(request):
+    return render_to_response('payroll/adminLogin.html')
+
+
+
+def adlogin(request):
+    errors = False
+    loginSuccess = False
+    if request.method == 'POST':
+        try:
+            password = request.POST['password']
+        except Exception:
+            errors = True
+            return render_to_response('payroll/adminLogin.html',{'login':loginSuccess,'error':errors})
+        user = authenticate( username = 'admin' ,password = password )
+        if user is not None:
+            if user.is_active:
+                login(request,user)
+                loginSuccess= True
+            else:
+                errors = True
+                return render_to_response('payroll/adminLogin.html',{'login':loginSuccess,'error':errors})
+        else:
+            errors = True
+            return render_to_response('payroll/adminLogin.html',{'login':loginSuccess,'error':errors})
+    return render_to_response('payroll/adminLogin.html',{'login':loginSuccess,'error':errors})
+
+
+
+def adlogout(request):
+   logout(request) 
+   return render_to_response('payroll/adminLogin.html',{'login':False,'error':False})
+   
+
+@login_required(login_url='/payroll/adminLogin')
+def makeReport(request):
+    month = request.POST['month']
+    year = request.POST['year']
+    payroll = Payroll.objects.filter( year=year ).filter(month=month)
+    hour = 0.0
+    salary = 0.0
+    num = len(payroll)
+    for item in payroll:
+        hour+=item.hour
+        salary+=item.salary
+    print hour,salary,num
+    return render_to_response('payroll/adminreport.html',{'payroll':payroll,'num':num,'month':month,'year':year,'hour':hour,'salary':salary,'avgsalary':salary/num,'avghour':float("%.1f"%(hour/num/30.0,))})

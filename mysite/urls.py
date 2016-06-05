@@ -19,6 +19,6 @@ from django.contrib import admin
 
 admin.AdminSite.site_header=u'Payroll 系统管理'
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^admin/', admin.site.urls,name="admin"),
     url(r'^payroll/',include('payroll.urls',namespace="payroll"))
 ]

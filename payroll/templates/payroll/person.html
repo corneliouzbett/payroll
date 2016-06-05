@@ -218,10 +218,9 @@
     </div>
 </div>
 {% if record %}
-<canvas class="Chart" id="myChart1" width="200" height="80"></canvas> 
 <p class="text-center">工作时长天数分布图</p>
 <canvas class="Chart" id="myChart2" width="200" height="100"></canvas> 
-<canvas class="Chart" id="myChart3" width="200" height="80"></canvas> 
+<canvas class="Chart" id="myChart1" width="200" height="80"></canvas> 
 {% endif %}
 {% endblock %}
 
@@ -306,7 +305,7 @@ var myChart = new Chart(ctx1, {
 	    datasets: [
 	        {
 	            label: "工作时长统计图",
-	            fill : false,
+	            fill : true,
 	            borderColor: "rgba(75,192,192,1)",
                 data : data1,
 	        }

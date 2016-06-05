@@ -31,4 +31,8 @@ urlpatterns = [
     url(r'^attend',payroll_view.attend,name='attend'),
     url(r'^makePost',payroll_view.makePost,name='makePost'),
     url(r'^getPayroll',payroll_view.getPayroll,name='getPayroll'),
+    url(r'adminlogin',payroll_view.adminLogin,name='adminLogin'),
+    url(r'adlogin',payroll_view.adlogin,name='adlogin'),
+    url(r'adlogout',payroll_view.adlogout,name="adlogout"),
+    url(r'makereport',payroll_view.makeReport,name='makeReport'),
 ]
