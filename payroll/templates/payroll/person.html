@@ -6,16 +6,18 @@
         <div class="span12">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist" id="myTab">
-                <li role="presentation" class="active">
+                <li role="presentation" class="active" id="list1">
                     <a href="#information" aria-controls="information" role="tab" data-toggle="tab">个人信息</a>
                 </li>
-                <li role="presentation">
+                <li role="presentation" id="list2">
                     <a href="#attend" aria-controls="attend" role="tab" data-toggle="tab">出勤信息</a>
                 </li>
-                <li role="presentation">
+                <li role="presentation" id="list3">
                     <a href="#payroll" aria-controls="payroll" role="tab" data-toggle="tab">工资单</a>
                 </li>
-                <li role="presentation"><a href="#participate" aria-controls="participate" role="tab" data-toggle="tab">我参与的</a></li>
+                <li role="presentation" id="list4">
+                    <a href="#participate" aria-controls="participate" role="tab" data-toggle="tab">我参与的</a>
+                </li>
             </ul>
 
             <!-- Tab panes -->
@@ -107,6 +109,8 @@
                                     <thead>
                                         <tr>
                                             <th>日期</th>
+                                            <th>上班时间</th>
+                                            <th>下班时间</th>
                                             <th>工作时长</th>
                                         </tr>
                                     </thead>
@@ -114,6 +118,8 @@
                                         {% for item in record %}
                                         <tr>
                                             <td>{{item.date}}</td>
+                                            <td>{{item.start}}</td>
+                                            <td>{{item.end}}</td>
                                             <td>{{item.hour}}小时</td>
                                         </tr>
                                         {% endfor %}
@@ -121,7 +127,9 @@
                                 </table> 
                             </div>
                         </div>
+
                     </div>
+                    
                 </div>
                 <div role="tabpanel" class="tab-pane" id="payroll">
                     <div class="container after-navbar">
@@ -209,13 +217,37 @@
         </div>
     </div>
 </div>
+{% if record %}
+<canvas class="Chart" id="myChart1" width="200" height="80"></canvas> 
+<p class="text-center">工作时长天数分布图</p>
+<canvas class="Chart" id="myChart2" width="200" height="100"></canvas> 
+<canvas class="Chart" id="myChart3" width="200" height="80"></canvas> 
+{% endif %}
 {% endblock %}
 
 {% block js %}
+// 时间选择插件
 
 $(function() {
 $(function () {
 $('#myTab li:eq({{num}}) a').tab('show');
+});
+
+$("#list1").click(function(){
+    $(".Chart").hide();
+});
+
+
+$("#list2").click(function(){
+    $(".Chart").show();
+});
+
+$("#list3").click(function(){
+    $(".Chart").hide();
+});
+
+$("#list4").click(function(){
+    $(".Chart").hide();
 });
 
 $( "#from1" ).datepicker({
@@ -250,8 +282,58 @@ dateFormat: 'yy-mm',
 });
 });
 
+// 初始数据
+var data0 = [{% for item in record %}{{item.hour}},{% endfor %}];
+// 折线图数据
+var data1 = data0;
+// 极地图数据
+var data2 =[0,0,0,0,0];
+for(var i=0;i<data0.length;++i){
+    if(data0[i]<6) data2[0]++;
+    else if(data0[i]>=6 && data0[i]<7) data2[1]++;
+    else if(data0[i]>=7 && data0[i]<8) data2[2]++;
+    else if(data0[i]>=8 && data0[i]<9) data2[3]++;
+    else data2[4]++;
+}
+
+
+// 画折线图
+var ctx1 = document.getElementById("myChart1");
+var myChart = new Chart(ctx1, {
+    type: 'line',
+    data: {
+        labels: [{% for item in record %}"{{item.date}}",{% endfor %}],
+	    datasets: [
+	        {
+	            label: "工作时长统计图",
+	            fill : false,
+	            borderColor: "rgba(75,192,192,1)",
+                data : data1,
+	        }
+	    ]
+	},
+});
+
+
+// 画极地图
+var ctx2 = document.getElementById("myChart2");
+var myChart = new Chart(ctx2, {
+    type: 'polarArea',
+    data : {
+        labels : ["小于6小时","6-7小时","7-8小时","8-9小时","9小时以上"],
+        datasets: [
+            {
+                label : "工作时长天数分布图",
+                backgroundColor : ["#E7E9ED","#4BC0C0","#FFCE56","#FF6384","#36A2EB"],
+                data : data2, 
+            }
+        ],
+    }
+});
+
+
+
 {% if errors.0 or errors.1 or errors.2 or errors.3 or errors.4 %}
 $('.collapse').collapse()
 {% endif %}
 {% endblock %}
-                                    <caption>年份</caption>

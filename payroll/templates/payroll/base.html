@@ -22,6 +22,7 @@
             <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
             <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
             <![endif]-->
+        <script src="{% static 'payroll/Chart.js' %}"></script>
     </head>
     <body>
         <!-- 导航条 -->
@@ -69,10 +70,10 @@
 
 
 
-
         <script src="{% static 'payroll/jquery/jquery.min.js' %}"></script>
         <script src="{% static 'payroll/bootstrap/js/bootstrap.min.js' %}"></script>
         <script src="{% static 'payroll/jquery-ui.min.js' %}"></script>
+        {% block script %}{% endblock %}
         <script type="text/javascript">
             {% if error|default:False %}
             $(function(){
