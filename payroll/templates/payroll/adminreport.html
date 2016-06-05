@@ -25,7 +25,7 @@
             <script src="{% static 'payroll/Chart.js' %}"></script>
     </head>
     <body>
-        <h3><p class="text-center">{{year}}年{{month}}月公司报表</p></h3>  
+        <h3><p class="text-center">{{year}}年{{month}}月公司内部报表</p></h3>  
         <div class="container">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
@@ -61,6 +61,8 @@
         <canvas id="canvas4" class="Chart" width="400" height="130"></canvas>
         <h3><p class="text-center">人员结构分布图</p></h3>
         <canvas id="canvas5" class="Chart" width="400" height="130"></canvas>
+        <h3><p class="text-center">部门架构图</p></h3>
+        <canvas id="canvas6" class="Chart" width="400" height="130"></canvas>
         
 
 
@@ -72,7 +74,7 @@
 
 
 // 工资
-var data0 = [{% for item in payroll %}{{item.salary}},{% endfor %}]
+var data0 = [{% for item in payroll %}{{item.salary}},{% endfor %}];
 // 工作时长
 var data1 = [{% for item in payroll %}{{item.hour}}/30.0,{% endfor %}];
 // 工资分布
@@ -95,12 +97,19 @@ for(var i=0;i<data1.length;++i){
     else if(data0[i]>20000 && data0[i]<=25000) data4[3]++;
     else data4[4]++;
 }
-//  人员结构分布图
-// var data5 = [{% for item in payroll %}item.employee.type.id,{%endfor%}];
-// var data6 = [0,0,0,0,0];
-// for(var i=0;i<data5.length;++i){
-//     data6[data5[i]-1]++;
-// }
+ // 人员结构分布图
+var data5 = [{% for item in payroll %}{{item.employee.type.id}},{% endfor %}];
+var data6 = [0,0,0,0,0];
+for(var i=0;i<data5.length;++i){
+    data6[data5[i]-1]++;
+}
+
+// 部门架构图
+var data7 = [{% for item in payroll %}{{item.employee.department.id}},{% endfor %}]
+var data8 = [0,0,0];
+for(var i=0;i<data7.length;++i){
+    data8[data7[i]-1]++;
+}
 
 // 工作时长柱状图
 var ctx1 = document.getElementById("canvas1");
@@ -173,21 +182,38 @@ var myChart = new Chart(ctx4, {
 });
 
 
-// // 人员架构分布图
-// var ctx5 = document.getElementById("canvas5");
-// var myChart = new Chart(ctx5, {
-//     type: 'pie',
-//     data : {
-//         labels : ["实习","高级hr","高级会计","高级软件工程师","部门经理"],
-//         datasets: [
-//             {
-//                 label : "人员架构分布图",
-//                 backgroundColor : ["#FFFF00","#4BC0C0","#FFCE56","#FF6384","#36A2EB"],
-//                 data : data6, 
-//             }
-//         ],
-//     }
-// });
+// 人员架构分布图
+var ctx5 = document.getElementById("canvas5");
+var myChart = new Chart(ctx5, {
+    type: 'pie',
+    data : {
+        labels : ["实习","高级hr","高级会计","高级软件工程师","部门经理"],
+        datasets: [
+            {
+                label : "人员架构分布图",
+                backgroundColor : ["#FFFF00","#4BC0C0","#FFCE56","#FF6384","#36A2EB"],
+                data : data6, 
+            }
+        ],
+    }
+});
+
+
+// 部门架构图
+var ctx6 = document.getElementById("canvas6");
+var myChart = new Chart(ctx6, {
+    type: 'doughnut',
+    data : {
+        labels : ["人事部","研发部","财务部"],
+        datasets: [
+            {
+                label : "部门架构图",
+                backgroundColor : ["#4BC0C0","#FFCE56","#36A2EB"],
+                data : data8, 
+            }
+        ],
+    }
+});
 
 
         </script>
