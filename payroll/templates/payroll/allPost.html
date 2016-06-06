@@ -18,7 +18,7 @@
             </div>
         </div>
     </div>
-    {% for item in post %}
+    {% for item in post.object_list %}
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-info">
@@ -30,5 +30,20 @@
         </div>
     </div> 
     {% endfor %}
+    <div class="row">
+        <div class="text-center">
+            <nav>
+                <ul class="pagination">
+                    {% if post.has_previous %}
+                    <li><a href="/payroll/allPost/?page={{post.previous_page_number}}">上一页</a></li>
+                    {% endif %}
+                    <li><a href="#" class="btn disabled">第{{post.number}}页|共{{num_pages}}页</a></li>
+                    {% if post.has_next %}
+                    <li><a href="/payroll/allPost?page={{post.next_page_number}}">下一页</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
 </div>
 {% endblock %}

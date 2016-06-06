@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.models import User
 from django.db.models import Sum
 from payroll.models import *
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import re
 from datetime import datetime
 
@@ -180,7 +181,14 @@ def allPost(request):
     user = request.user
     if not user.is_authenticated():
         loginSuccess = False
-    return render_to_response('payroll/allPost.html',{'post':post,'login':loginSuccess})
+    paginator = Paginator(post,10)
+    num_pages =  paginator.num_pages
+    try:
+        pagenum = int(request.GET.get('page','1'))
+    except ValueError:
+        pagenum = 1
+    data = paginator.page(pagenum)
+    return render_to_response('payroll/allPost.html',{'post':data,'login':loginSuccess,'num_pages':num_pages})
 
 
 @login_required(login_url='/payroll/home')
