@@ -205,7 +205,6 @@ def makeComment(request,id):
         thePost = Post.objects.get( pk=id )
         thePost.modifyDateTime = datetime.now()
         thePost.save()
-        print request.POST
         theComment = Comment.objects.create( content=request.POST['mycomment'],pubdate=datetime.now(),employee=user.employee,post=thePost )
         comments = thePost.comment_set.all()
     else:
@@ -240,7 +239,16 @@ def makePost(request):
     user =  request.user
     Post.objects.create( title=postTitle,content=postContent,employee=user.employee )
     post = Post.objects.all()
-    return render_to_response('payroll/allPost.html',{'post':post,'login':True})
+
+    paginator = Paginator(post,10)
+    num_pages =  paginator.num_pages
+    try:
+        pagenum = int(request.GET.get('page','1'))
+    except ValueError:
+        pagenum = 1
+    data = paginator.page(pagenum)
+    return render_to_response('payroll/allPost.html',{'post':data,'login':True,'num_pages':num_pages})
+
 
 
 @login_required(login_url='/payroll/home')
